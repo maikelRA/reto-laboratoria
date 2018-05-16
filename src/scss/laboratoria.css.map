@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,iCAAkC;EAChC,MAAO;IACL,OAAO,EAAE,MAAM;;EAGjB,MAAO;IACL,MAAM,EAAE,MAAM;IACd,SAAS,EAAE,KAAK;AAIpB,yBAA0B;EACxB,aAAc;IACZ,YAAY,EAAE,IAAI",
+"sources": ["laboratoria.scss"],
+"names": [],
+"file": "laboratoria.css"
+}

@@ -1,18 +1,22 @@
 var webpack = require('webpack');
 var path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 
 var BUILD_DIR = path.resolve(__dirname, './public');
 var APP_DIR = path.resolve(__dirname, './src');
+var CSS_DIR = path.resolve(__dirname, './src/scss/laboratoria.scss');
+const extractStyles = new ExtractTextPlugin({
+    filename: '[name].css'
+});
 
 var config = {
-    entry: {
-        "bundle": APP_DIR,
-        "bundle.min": APP_DIR,
-    },
+    entry: {"bundle": APP_DIR,"bundle.min": APP_DIR , "laboratoria": CSS_DIR},
     output: {
         path: BUILD_DIR,
         filename: "[name].js",
         publicPath: '/public/'
+
     },
     module: {
         loaders: [{
@@ -30,17 +34,33 @@ var config = {
                     presets: ['es2015', 'react']
                 }
             },
-            { test: /\.css$/, loader: "style-loader!css-loader" }
+            {
+                test: /\.css$/,
+                use: extractStyles.extract({
+                    use: 'css-loader'
+                })
+            },
+            {
+                test: /\.scss$/,
+                use: extractStyles.extract({
+                    use: [{
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'sass-loader'
+                    }]
+                })
+            }
         ]
     },
     resolve: {
-        extensions: ['.js','.jsx']
+        extensions: ['.js', '.jsx']
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
             include: /\.min\.js$/,
             minimize: true
-        })
+        }),
+        extractStyles
     ]
 };
 

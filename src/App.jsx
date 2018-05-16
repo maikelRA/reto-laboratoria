@@ -1,14 +1,14 @@
-import React from 'react';
-import createClass from 'create-react-class';
+import React, {Component} from 'react';
+import Home from './components/Home';
 
-const App  = createClass( {
+class App extends Component {
     render() {
         return (
             <div className="App">
-               <h1>Hello React Simple APP</h1>
+               <Home/>
             </div>
         );
     }
-});
+};
 
 export default App;
