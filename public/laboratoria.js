@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "/public/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 392);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 28:
+/***/ 392:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

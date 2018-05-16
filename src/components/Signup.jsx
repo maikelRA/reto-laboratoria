@@ -2,8 +2,6 @@ import React, {Component} from "react";
 import {Button, FormGroup, FormControl, ControlLabel, Panel, HelpBlock} from "react-bootstrap";
 import {CommonValidation} from '../utils/CommonValidation';
 import Header from './Header';
-import {users} from '../users_for_the_login';
-import {connect} from 'react-redux';
 
 class Login extends Component {
     constructor(props) {
@@ -12,8 +10,7 @@ class Login extends Component {
             email: "",
             password: "",
             emailValidation: {withError: false, withMessage: ''},
-            passwordValidation: {withError: false, withMessage: ''},
-            authenticationError: {withError: false, withMessage: ''}
+            passwordValidation: {withError: false, withMessage: ''}
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -24,6 +21,7 @@ class Login extends Component {
             this.setState({emailValidation: {withError: true, withMessage: "El campo de usuario no puede estar en blanco"}});
             return false;
         } else {
+            console.log("Pasa a validar email");
             if(!CommonValidation.isEmail(email)){
                 console.log("No es email valido");
                 this.setState({emailValidation: {withError: true, withMessage: "El campo de usuario no es un email válido"}});
@@ -59,36 +57,21 @@ class Login extends Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.validateForm()) {
-            const user = users.filter((user) => user.email === this.state.email)[0];
-            if(user){
-                if(user.password === this.state.password){
-                    localStorage.setItem('USERNAME', user.name);
-                    this.setState({authenticationError: {withError: false, withMessage: ""}});
-                    this.props.history.push({pathname: '/user-wall'})
-
-                } else {
-                    this.setState({authenticationError: {withError: true, withMessage: "Email o password son incorrectos"}});
-                }
-            } else {
-                this.setState({authenticationError: {withError: true, withMessage: "No coincide con ninguna cuenta"}});
-            }
-
+            console.log("Hago login")
         } else {
             console.log("Tiene errores")
         }
     }
 
     render() {
-        let {emailValidation, passwordValidation, authenticationError} = this.state;
+        let {emailValidation, passwordValidation} = this.state;
         return (
             <div className="container">
                 <Header/>
                 <div className="Login">
                     <Panel bsStyle="info">
-                        <Panel.Heading>Welcome back, please Sign In </Panel.Heading>
+                        <Panel.Heading>Sign Up </Panel.Heading>
                         <Panel.Body>
-
-
                             <form onSubmit={this.handleSubmit}>
                                 <FormGroup controlId="email" bsSize="large"
                                            className={emailValidation.withError ? 'has-error' : ''}>
@@ -112,24 +95,28 @@ class Login extends Component {
                                     {passwordValidation.withError &&
                                     <HelpBlock>{passwordValidation.withMessage}</HelpBlock>}
                                 </FormGroup>
-                                <div className={authenticationError.withError ? 'has-error text-center' : ''}>
-                                    {authenticationError.withError &&
-                                    <HelpBlock>{authenticationError.withMessage}</HelpBlock>}
-                                </div>
+                                <FormGroup controlId="re-password" bsSize="large"
+                                           className={passwordValidation.withError ? 'has-error' : ''}>
+                                    <ControlLabel>Password:</ControlLabel>
+                                    <FormControl
+                                        value={this.state.password}
+                                        onChange={this.handleChange.bind(this)}
+                                        type="password"
+                                    />
+                                    {passwordValidation.withError &&
+                                    <HelpBlock>{passwordValidation.withMessage}</HelpBlock>}
+                                </FormGroup>
                                 <Button
                                     block
                                     bsSize="large"
                                     bsStyle="success"
                                     type="submit"
                                 >
-                                    Login
+                                    Signup
                                 </Button>
                             </form>
-
-
                         </Panel.Body>
                     </Panel>
-
                 </div>
             </div>
 
@@ -137,12 +124,4 @@ class Login extends Component {
     }
 }
 
-
-const mapStateToProps = state => {
-    return {
-        router: state.router
-    }
-};
-
-
-export default connect(mapStateToProps)(Login);
+export default  Login;

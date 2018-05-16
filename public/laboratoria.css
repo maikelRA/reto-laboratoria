@@ -1,6 +1,10 @@
 @media all and (min-width: 480px) {
   .Login {
     padding: 60px 0; }
-  .Login form {
+  .Login {
     margin: 0 auto;
-    max-width: 320px; } }
+    max-width: 350px; } }
+
+@media (min-width: 768px) {
+  .navbar-right {
+    margin-right: 15px; } }
