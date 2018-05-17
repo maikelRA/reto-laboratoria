@@ -1,14 +1,76 @@
 import React, {Component} from "react";
 import {Navbar, Nav, NavItem, Grid, Row, Col, Image, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {database, auth} from '../Firebase';
 
 class UserWall extends Component {
     constructor(props) {
         super(props);
-
+        this.addPost = this.addPost.bind(this);
+        this.state = {
+            currentUser: JSON.parse(localStorage.getItem('CURRENT_USER')),
+            postDescription: '',
+            hasError: false,
+            errorMessage: "El campo no puede estar vacío",
+            postVisibility: 0
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
+    handleSelect(event){
+        this.setState({
+            [event.target.id]: event.target.value
+        });
+    }
+
+    handleChange(event) {
+        this.setState({
+            [event.target.id]: event.target.value
+        });
+        if(event.target.value.length > 0){
+            this.setState({hasError: false});
+        } else {
+            this.setState({hasError: true});
+        }
+    }
+
+    isValidTextarea() {
+        return this.state.postDescription.length > 0
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        if (this.isValidTextarea()) {
+            this.addPost();
+            this.setState({postDescription: ''});
+        } else {
+            this.setState({hasError: true});
+        }
+    }
+
+    addPost() {
+        const {id, email, password} = this.state.currentUser;
+        const {postDescription, postVisibility} = this.state;
+        let newPost = {description: postDescription, visibility: postVisibility}
+        auth.signInWithEmailAndPassword(email, password).then((user) => {
+            if (user) {
+                database.child(id).child('posts').push().set(newPost);
+            }
+        }).catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+            console.log(errorMessage);
+        });
+    }
+
+    postList
+
+
     render() {
-        console.log(this.props);
+        const {name} = this.state.currentUser;
         return (
             <div >
                 <div className="container">
@@ -21,7 +83,7 @@ class UserWall extends Component {
                         <Navbar.Collapse>
                             <Nav pullRight>
                                 <NavItem eventKey={1} disabled>
-                                    Bienvenido {localStorage.getItem('USERNAME')} a tu muro
+                                    Bienvenido {name} a tu muro
                                 </NavItem>
 
                             </Nav>
@@ -35,21 +97,22 @@ class UserWall extends Component {
                             <div className="card">
                                 <div className="card-body">
                                     <div className="card-body--header">
-                                        <form action="">
-                                            <FormGroup controlId="formControlsTextarea">
-                                                <FormControl componentClass="textarea" rows="3"
-                                                             placeholder={`¿Qué estás pensando ${ localStorage.getItem('USERNAME')}?`}/>
-                                            </FormGroup>
-                                        </form>
+                                        <FormGroup controlId="postDescription"
+                                                   className={this.state.hasError ? 'has-error' : ''}>
+                                            <FormControl componentClass="textarea" rows="3"
+                                                         onChange={this.handleChange}
+                                                         value={this.state.postDescription}
+                                                         placeholder={`¿Qué estás pensando ${ name }?`}/>
+                                        </FormGroup>
                                     </div>
                                 </div>
                                 <div className="share-post">
-                                    <select name="select-visibility" id="post-visibility">
-                                            <option value="amigos">Amigos</option>
-                                            <option value="publico">Público</option>
+                                    <select name="select-visibility" id="postVisibility" onChange={this.handleSelect}>
+                                        <option value="0">Amigos</option>
+                                        <option value="1">Público</option>
                                     </select>
 
-                                   <button>publicar</button>
+                                    <button onClick={this.handleSubmit}>publicar</button>
                                 </div>
 
 

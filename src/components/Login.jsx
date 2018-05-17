@@ -16,6 +16,7 @@ class Login extends Component {
             authenticationError: {withError: false, withMessage: ''}
         };
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     isValidEmail(email){
@@ -25,7 +26,6 @@ class Login extends Component {
             return false;
         } else {
             if(!CommonValidation.isEmail(email)){
-                console.log("No es email valido");
                 this.setState({emailValidation: {withError: true, withMessage: "El campo de usuario no es un email válido"}});
                 return false;
             }
@@ -60,9 +60,10 @@ class Login extends Component {
         event.preventDefault();
         if (this.validateForm()) {
             const user = users.filter((user) => user.email === this.state.email)[0];
+
             if(user){
                 if(user.password === this.state.password){
-                    localStorage.setItem('USERNAME', user.name);
+                    localStorage.setItem('CURRENT_USER', JSON.stringify(user));
                     this.setState({authenticationError: {withError: false, withMessage: ""}});
                     this.props.history.push({pathname: '/user-wall'})
 
@@ -97,7 +98,7 @@ class Login extends Component {
                                         autoFocus
                                         type="text"
                                         value={this.state.email}
-                                        onChange={this.handleChange.bind(this)}
+                                        onChange={this.handleChange}
                                     />
                                     {emailValidation.withError && <HelpBlock>{emailValidation.withMessage}</HelpBlock>}
                                 </FormGroup>
@@ -106,7 +107,7 @@ class Login extends Component {
                                     <ControlLabel>Password:</ControlLabel>
                                     <FormControl
                                         value={this.state.password}
-                                        onChange={this.handleChange.bind(this)}
+                                        onChange={this.handleChange}
                                         type="password"
                                     />
                                     {passwordValidation.withError &&

@@ -61,7 +61,7 @@ a .active {
   position: relative;
   top: -23px;
   right: -78.7%; }
-  .share-post #post-visibility {
+  .share-post #postVisibility {
     margin-right: 8px; }
 
 @media all and (min-width: 480px) {
