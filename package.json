@@ -4,7 +4,7 @@
   "description": "Reto Laboratoria",
   "main": "index.js",
   "scripts": {
-    "start": "npm start",
+    "start": "webpack-dev-server --hot",
     "build": "webpack",
     "watch": "webpack --watch",
     "dev": "webpack-dev-server",
