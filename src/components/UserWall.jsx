@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import {Navbar, Nav, NavItem, Grid, Row, Col, Image, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import {database, auth} from '../Firebase';
+import {connect} from 'react-redux';
+import {posts, addPost} from '../actionCreators';
 
 class UserWall extends Component {
     constructor(props) {
         super(props);
-        this.addPost = this.addPost.bind(this);
         this.state = {
             currentUser: JSON.parse(localStorage.getItem('CURRENT_USER')),
             postDescription: '',
@@ -18,7 +18,11 @@ class UserWall extends Component {
         this.handleSelect = this.handleSelect.bind(this);
     }
 
-    handleSelect(event){
+    componentWillMount() {
+        this.props.getPosts();
+    }
+
+    handleSelect(event) {
         this.setState({
             [event.target.id]: event.target.value
         });
@@ -28,7 +32,7 @@ class UserWall extends Component {
         this.setState({
             [event.target.id]: event.target.value
         });
-        if(event.target.value.length > 0){
+        if (event.target.value.length > 0) {
             this.setState({hasError: false});
         } else {
             this.setState({hasError: true});
@@ -42,35 +46,20 @@ class UserWall extends Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.isValidTextarea()) {
-            this.addPost();
+            const {postDescription, postVisibility} = this.state;
+            let newPost = {description: postDescription, visibility: postVisibility}
+            this.props.addPost(newPost);
             this.setState({postDescription: ''});
         } else {
             this.setState({hasError: true});
         }
     }
 
-    addPost() {
-        const {id, email, password} = this.state.currentUser;
-        const {postDescription, postVisibility} = this.state;
-        let newPost = {description: postDescription, visibility: postVisibility}
-        auth.signInWithEmailAndPassword(email, password).then((user) => {
-            if (user) {
-                database.child(id).child('posts').push().set(newPost);
-            }
-        }).catch(function (error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ...
-            console.log(errorMessage);
-        });
-    }
-
-    postList
-
 
     render() {
+        const {posts} = this.props;
         const {name} = this.state.currentUser;
+        console.log(this.state.loading)
         return (
             <div >
                 <div className="container">
@@ -114,9 +103,22 @@ class UserWall extends Component {
 
                                     <button onClick={this.handleSubmit}>publicar</button>
                                 </div>
-
-
                             </div>
+
+                            { posts.map(
+                                (post) => {
+                                    return (
+                                        <div key={post.key} className="card">
+                                            <div className="card-body">
+                                                <div>{post.description}</div>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            )}
+
+                            {/*<span className={!this.state.loading ? 'hidden' : '2'}>Loading.....{this.state.loading}</span>*/}
+
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="card">
@@ -169,4 +171,24 @@ class UserWall extends Component {
     }
 }
 
-export default  UserWall;
+
+const mapStateToProps = state => {
+    return {
+        posts: state.posts
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getPosts(){
+            return dispatch(posts());
+        },
+        addPost(newPost){
+            return dispatch((addPost(newPost)));
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserWall);
+

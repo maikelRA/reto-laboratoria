@@ -2,8 +2,9 @@ import React, {Component} from "react";
 import {Button, FormGroup, FormControl, ControlLabel, Panel, HelpBlock} from "react-bootstrap";
 import {CommonValidation} from '../utils/CommonValidation';
 import Header from './Header';
-import {users} from '../users_for_the_login';
+import {users} from '../usersForLogin';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 
 class Login extends Component {
     constructor(props) {
@@ -146,4 +147,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps)(Login);
+export default withRouter(connect(mapStateToProps)(Login));

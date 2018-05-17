@@ -63,16 +63,20 @@ var config = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         }),
-    ]
-};
-
-if (process.env.NODE_ENV === 'production') {
-    config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             include: /\.min\.js$/,
             minimize: true
         })
-    )
-}
+    ]
+};
+
+// if (process.env.NODE_ENV === 'production') {
+//     config.plugins.push(
+//         new webpack.optimize.UglifyJsPlugin({
+//             include: /\.min\.js$/,
+//             minimize: true
+//         })
+//     )
+// }
 
 module.exports = config;
