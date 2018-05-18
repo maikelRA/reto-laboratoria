@@ -56,27 +56,18 @@ var config = {
         extensions: [".js", ".jsx"]
     },
     devServer: {
-        historyApiFallback: true
+        historyApiFallback: true,
+        hot: true
     },
     plugins: [
         extractStyles,
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            include: /\.min\.js$/,
-            minimize: true
-        })
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
     ]
 };
-
-// if (process.env.NODE_ENV === 'production') {
-//     config.plugins.push(
-//         new webpack.optimize.UglifyJsPlugin({
-//             include: /\.min\.js$/,
-//             minimize: true
-//         })
-//     )
-// }
 
 module.exports = config;
