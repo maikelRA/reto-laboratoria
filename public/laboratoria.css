@@ -41,6 +41,20 @@ a .active {
     .card-body .history span {
       font-size: 13px; }
 
+.post-actions, .filter-actions {
+  margin-top: 12px; }
+  .post-actions .action, .filter-actions .action {
+    text-decoration: underline;
+    color: #039be5; }
+
+.post-actions .action {
+  margin-right: 10px; }
+
+.filter-actions {
+  margin-bottom: 14px; }
+  .filter-actions .action {
+    margin-right: 4px; }
+
 .img-small {
   height: 20px;
   width: 20px; }

@@ -3,7 +3,7 @@ import {Button, FormGroup, FormControl, ControlLabel, Panel, HelpBlock} from "re
 import {CommonValidation} from '../utils/CommonValidation';
 import Header from './Header';
 
-class Login extends Component {
+class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,9 +21,7 @@ class Login extends Component {
             this.setState({emailValidation: {withError: true, withMessage: "El campo de usuario no puede estar en blanco"}});
             return false;
         } else {
-            console.log("Pasa a validar email");
             if(!CommonValidation.isEmail(email)){
-                console.log("No es email valido");
                 this.setState({emailValidation: {withError: true, withMessage: "El campo de usuario no es un email válido"}});
                 return false;
             }
@@ -57,9 +55,9 @@ class Login extends Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.validateForm()) {
-            console.log("Hago login")
+
         } else {
-            console.log("Tiene errores")
+
         }
     }
 
@@ -124,4 +122,4 @@ class Login extends Component {
     }
 }
 
-export default  Login;
+export default  Signup;

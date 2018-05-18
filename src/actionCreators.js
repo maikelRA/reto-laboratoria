@@ -1,22 +1,32 @@
-
-import {ADD_POST, POSTS_LIST} from './actionTypes';
+import {ADD_POST, POSTS_LIST, REMOVE_POST, LOADING} from './actionTypes';
 import {database, auth} from './Firebase';
 import {snapshotToArray} from './helpFunctions';
 
-const posts = () => {
-    const current_user = JSON.parse(localStorage.getItem('CURRENT_USER'));
-    return dispatch => {
-        let postsRef = database.ref('/'+current_user.id + '/posts');
-        postsRef.once('value').then(snapshot => {
-            console.log("Snapshopt",'/'+current_user.id + '/posts' )
-            return dispatch({
-                type: POSTS_LIST,
-                posts: snapshotToArray(snapshot)
-            });
-        })
+const posts = () => (dispatch) => {
 
-    }
-}
+    dispatch({
+        type: LOADING,
+        loading: true
+    });
+
+    const current_user = JSON.parse(localStorage.getItem('CURRENT_USER'));
+
+    let postsRef = database.ref('/' + current_user.id + '/posts');
+    return postsRef.once('value').then(snapshot => {
+        dispatch({
+            type: LOADING,
+            loading: false
+        });
+        dispatch({
+            type: POSTS_LIST,
+            posts: snapshotToArray(snapshot)
+        });
+
+        return snapshotToArray(snapshot)
+    });
+
+
+};
 
 
 const addPost = (newPost) => {
@@ -24,7 +34,9 @@ const addPost = (newPost) => {
     return dispatch => {
         auth.signInWithEmailAndPassword(email, password).then((user) => {
             if (user) {
-                database.ref().child(id).child('posts').push().set(newPost).then(() => {
+                const postRef = database.ref().child(id).child('posts').push();
+                newPost['key'] = postRef.key;
+                postRef.set(newPost).then(() => {
                     return dispatch({
                         type: ADD_POST,
                         post: newPost
@@ -32,14 +44,24 @@ const addPost = (newPost) => {
                 });
             }
         }).catch(function (error) {
-            // Handle Errors here.
-            var errorCode = error.code;
             var errorMessage = error.message;
-            // ...
             console.log(errorMessage);
         });
 
     }
-}
+};
 
-export  {posts, addPost};
+
+const removePost = (postId) => {
+    let {id} = JSON.parse(localStorage.getItem('CURRENT_USER'));
+    return dispatch => {
+        database.ref().child(id).child('posts').child(postId).set(null).then(() => {
+            return dispatch({
+                type: REMOVE_POST,
+                id: postId
+            });
+        });
+    }
+};
+
+export  {posts, addPost, removePost};

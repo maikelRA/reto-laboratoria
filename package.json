@@ -4,7 +4,7 @@
   "description": "Reto Laboratoria",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.config.js",
+    "build": "webpack ",
     "dev": "webpack-dev-server --hot --inline",
     "start": "npm run build && NODE_ENV=production node server.js",
     "watch": "webpack --watch",
@@ -29,6 +29,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "^1.1.0",
+    "react-spinners": "^0.3.2",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.7",

@@ -10,14 +10,14 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from "redux-thunk";
 import createHistory from 'history/createBrowserHistory';
 
-import {posts} from './reducers';
+import {posts, loading} from './reducers';
 
 import App from './App';
 
 const history = createHistory();
 const middleware = routerMiddleware(history);
 
-const reducers = combineReducers({ posts, router: routerReducer });
+const reducers = combineReducers({ posts,loading, router: routerReducer });
 const store = createStore(reducers, composeWithDevTools(applyMiddleware(middleware, thunk)));
 
 ReactDOM.render(

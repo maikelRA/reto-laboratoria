@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "laboratoria-db"
+    "default": "laboratoria-db",
+    "reto": "laboratoria-db",
+    "laboratoria-reto": "laboratoria-db"
   }
 }

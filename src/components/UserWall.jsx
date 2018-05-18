@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {Navbar, Nav, NavItem, Grid, Row, Col, Image, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import {posts, addPost} from '../actionCreators';
+import {posts, addPost, removePost} from '../actionCreators';
+import {RingLoader, SyncLoader} from 'react-spinners';
 
 class UserWall extends Component {
     constructor(props) {
@@ -59,7 +60,6 @@ class UserWall extends Component {
     render() {
         const {posts} = this.props;
         const {name} = this.state.currentUser;
-        console.log(this.state.loading)
         return (
             <div >
                 <div className="container">
@@ -105,19 +105,34 @@ class UserWall extends Component {
                                 </div>
                             </div>
 
-                            { posts.map(
+                            { posts.length > 0 && <div className="filter-actions">
+                                <button  className="btn action">All</button><button  className="btn action">Amigos</button><button  className="btn action">Público</button>
+                            </div>}
+
+                            {!this.props.loading && posts.map(
                                 (post) => {
                                     return (
                                         <div key={post.key} className="card">
                                             <div className="card-body">
-                                                <div>{post.description}</div>
+                                                <div className="card-body--header">
+                                                    <div>{post.description}</div>
+                                                </div>
+                                                <div className="post-actions">
+                                                    <button className=" action" >Editar</button><button  className=" action" onClick={() => this.props.removePost(post.key)}>Eliminar</button>
+                                                </div>
                                             </div>
                                         </div>
                                     );
                                 }
                             )}
 
-                            {/*<span className={!this.state.loading ? 'hidden' : '2'}>Loading.....{this.state.loading}</span>*/}
+                            <div className='sweet-loading'>
+                                <SyncLoader
+                                    color={'#80d6b7'}
+                                    loading={this.props.loading}
+                                    size={10}
+                                />
+                            </div>
 
                         </Col>
                         <Col xs={12} md={4}>
@@ -174,7 +189,8 @@ class UserWall extends Component {
 
 const mapStateToProps = state => {
     return {
-        posts: state.posts
+        posts: state.posts,
+        loading: state.loading
     }
 };
 
@@ -185,6 +201,9 @@ const mapDispatchToProps = dispatch => {
         },
         addPost(newPost){
             return dispatch((addPost(newPost)));
+        },
+        removePost(postId){
+            return dispatch((removePost(postId)));
         }
     }
 };

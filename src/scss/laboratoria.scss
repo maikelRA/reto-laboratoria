@@ -52,6 +52,28 @@ a {
       }
     }
   }
+
+
+}
+.post-actions, .filter-actions{
+  margin-top: 12px;
+  .action{
+    text-decoration: underline;
+    color: #039be5;
+  }
+}
+
+.post-actions{
+  .action{
+    margin-right: 10px;
+  }
+}
+
+.filter-actions{
+  margin-bottom: 14px;
+  .action{
+    margin-right: 4px;
+  }
 }
 
 .img-small {
