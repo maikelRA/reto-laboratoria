@@ -57,7 +57,8 @@ var config = {
     },
     devServer: {
         historyApiFallback: true,
-        hot: true
+        hot: true,
+        port: 8080
     },
     plugins: [
         extractStyles,
