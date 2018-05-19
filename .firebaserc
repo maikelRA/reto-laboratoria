@@ -2,6 +2,7 @@
   "projects": {
     "default": "laboratoria-db",
     "reto": "laboratoria-db",
-    "laboratoria-reto": "laboratoria-db"
+    "laboratoria-reto": "laboratoria-db",
+    "reto-laboratoria": "laboratoria-db"
   }
 }
