@@ -1,4 +1,4 @@
-import {ADD_POST, POSTS_LIST, REMOVE_POST, LOADING} from './actionTypes';
+import {ADD_POST, POSTS_LIST, REMOVE_POST, UPDATE_POST, LOADING} from './actionTypes';
 import {database, auth} from './Firebase';
 import {snapshotToArray} from './helpFunctions';
 
@@ -64,4 +64,17 @@ const removePost = (postId) => {
     }
 };
 
-export  {posts, addPost, removePost};
+
+const updatePost = (value,postId) => {
+    let {id} = JSON.parse(localStorage.getItem('CURRENT_USER'));
+    return dispatch => {
+        database.ref().child(id +'/posts/'+ postId).update({description: value}).then(() => {
+            return dispatch({
+                type: UPDATE_POST,
+                post: {key: postId, description: value}
+            });
+        });
+    }
+};
+
+export  {posts, addPost, removePost, updatePost};

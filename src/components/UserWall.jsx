@@ -1,8 +1,10 @@
 import React, {Component} from "react";
-import {Navbar, Nav, NavItem, Grid, Row, Col, Image, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {Navbar, Nav, NavItem, Grid, Row, Col, Image, FormGroup, FormControl} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import {posts, addPost, removePost} from '../actionCreators';
-import {RingLoader, SyncLoader} from 'react-spinners';
+import {posts, addPost, removePost, updatePost} from '../actionCreators';
+import {SyncLoader} from 'react-spinners';
+import Post from './Post';
+
 
 class UserWall extends Component {
     constructor(props) {
@@ -17,6 +19,7 @@ class UserWall extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.onUpdatePost = this.onUpdatePost.bind(this);
     }
 
     componentWillMount() {
@@ -38,6 +41,10 @@ class UserWall extends Component {
         } else {
             this.setState({hasError: true});
         }
+    }
+
+    onUpdatePost(value, postId) {
+        this.props.updatePost(value, postId);
     }
 
     isValidTextarea() {
@@ -106,22 +113,16 @@ class UserWall extends Component {
                             </div>
 
                             { posts.length > 0 && <div className="filter-actions">
-                                <button  className="btn action">All</button><button  className="btn action">Amigos</button><button  className="btn action">Público</button>
+                                <button className="btn action">All</button>
+                                <button className="btn action">Amigos</button>
+                                <button className="btn action">Público</button>
                             </div>}
 
                             {!this.props.loading && posts.map(
                                 (post) => {
                                     return (
-                                        <div key={post.key} className="card">
-                                            <div className="card-body">
-                                                <div className="card-body--header">
-                                                    <div>{post.description}</div>
-                                                </div>
-                                                <div className="post-actions">
-                                                    <button className=" action" >Editar</button><button  className=" action" onClick={() => this.props.removePost(post.key)}>Eliminar</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <Post key={post.key} post={post} onUpdatePost={this.onUpdatePost}
+                                              handleRemovePost={() => this.props.removePost(post.key)}/>
                                     );
                                 }
                             )}
@@ -133,7 +134,6 @@ class UserWall extends Component {
                                     size={10}
                                 />
                             </div>
-
                         </Col>
                         <Col xs={12} md={4}>
                             <div className="card">
@@ -204,6 +204,9 @@ const mapDispatchToProps = dispatch => {
         },
         removePost(postId){
             return dispatch((removePost(postId)));
+        },
+        updatePost(value, postId){
+            return dispatch((updatePost(value, postId)));
         }
     }
 };
